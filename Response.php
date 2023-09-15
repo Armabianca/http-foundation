@@ -355,7 +355,21 @@ class Response
 
         // cookies
         foreach ($this->headers->getCookies() as $cookie) {
-            setcookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+            $tmpPath = explode(';', $cookie->getPath());
+            $path = isset($tmpPath[0]) ? $tmpPath['0'] : '';
+            $sameSite = 'strict';
+            if ($tmpPath[1]) {
+                $tmpSameSite = explode('=', $tmpPath[1]);
+                $sameSite = isset($tmpSameSite[1]) ? $tmpSameSite[1] : $sameSite;
+            }
+            setcookie($cookie->getName(), $cookie->getValue(), array(
+                'expires' => $cookie->getExpiresTime(),
+                'path' => $path,
+                'samesite' => $sameSite,
+                'domain' => $cookie->getDomain(),
+                'secure' => $cookie->isSecure(),
+                'httponly' => $cookie->isHttpOnly()
+            ));
         }
 
         return $this;
