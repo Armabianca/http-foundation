@@ -358,7 +358,7 @@ class Response
             $tmpPath = explode(';', $cookie->getPath());
             $path = isset($tmpPath[0]) ? $tmpPath['0'] : '';
             $sameSite = 'strict';
-            if ($tmpPath[1]) {
+            if (isset($tmpPath[1])) {
                 $tmpSameSite = explode('=', $tmpPath[1]);
                 $sameSite = isset($tmpSameSite[1]) ? $tmpSameSite[1] : $sameSite;
             }
